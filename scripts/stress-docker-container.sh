@@ -12,7 +12,7 @@ echo -n "${BASH_SOURCE[0]} [OPTIONS] [ARGS]
 
  Options:
    -d | --duration              Specify the duration in seconds for each run. (Default: 60)
-   -c | --container             The initial container (Default: cassandra-docker-container)
+   -c | --container             The initial container (Default: cassandra-0-docker)
    -e | --experiment		The experiment-controller pod (Default: experiment-controller-0)
    -h | --help                  Display this message
 
@@ -35,7 +35,7 @@ ARG_REGEX=^[0-9]*\:[0-9]*\:[0-9]*$
 ARG_SINGLE_RUN_REGEX=^[0-9]*$
 
 duration=60
-container="cassandra-docker-container"
+container="cassandra-0-docker"
 experiment="experiment-controller-0"
 
 request=125
