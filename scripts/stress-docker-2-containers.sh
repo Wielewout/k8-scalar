@@ -12,7 +12,7 @@ echo -n "${BASH_SOURCE[0]} [OPTIONS] [ARGS]
 
  Options:
    -d | --duration              Specify the duration in seconds for each run. (Default: 60)
-   -p | --pod                   The initial pod (Default: cassandra-0)
+   -c | --container             The initial container (Default: cassandra-0-docker)
    -e | --experiment		The experiment-controller pod (Default: experiment-controller-0)
    -h | --help                  Display this message
 
@@ -35,7 +35,8 @@ ARG_REGEX=^[0-9]*\:[0-9]*\:[0-9]*$
 ARG_SINGLE_RUN_REGEX=^[0-9]*$
 
 duration=60
-pod="cassandra-0"
+container="cassandra-0-docker"
+container1="cassandra-1-docker"
 experiment="experiment-controller-0"
 
 request=125
@@ -59,9 +60,9 @@ get_input() {
                     shift;
                     duration=${1}
                     ;;
-                -p|--pod)
+                -c|--container)
                     shift;
-                    pod=${1}
+                    container=${1}
                     ;;
                 -e|--experiment)
                     shift;
@@ -101,8 +102,11 @@ get_input() {
         return
 }
 setup_experiment() {
-	kubectl exec ${pod} -- cqlsh -e "CREATE KEYSPACE IF NOT EXISTS scalar WITH replication = {'class':'SimpleStrategy', 'replication_factor':1};"
-	kubectl exec ${pod} -- cqlsh -e "CREATE TABLE IF NOT EXISTS scalar.logs (id text PRIMARY KEY, timestamp text, message text);"
+	create_keyspace_cmd="cqlsh -e \"CREATE KEYSPACE IF NOT EXISTS scalar WITH replication = {'class':'SimpleStrategy', 'replication_factor':1};\""
+	create_table_cmd="cqlsh -e \"CREATE TABLE IF NOT EXISTS scalar.logs (id text PRIMARY KEY, timestamp text, message text);\""
+	
+        minikube ssh docker exec ${container} ${create_keyspace_cmd}
+	minikube ssh docker exec ${container} ${create_table_cmd}
 }
 setup_run() {
         local user_load=$1
@@ -112,26 +116,34 @@ setup_run() {
         kubectl exec ${experiment} -- cp /exp/etc/experiment-template.properties /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_LOAD_TEMPLATE@${user_load}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_DURATION_TEMPLATE@${duration}@g" /tmp/experiment.properties
-        kubectl exec ${experiment} -- sed -ie "s@target_urls=.*\$@target_urls=${pod}.cassandra@g" /tmp/experiment.properties
+        kubectl exec ${experiment} -- sed -ie "s@target_urls=.*\$@target_urls=$(minikube ip)@g" /tmp/experiment.properties
         
-        rm -f stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-        printf "${user_load} requests per second for ${duration} seconds on ${pod}\n\nBefore\n" >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	kubectl exec -it ${pod} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+        rm -f stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+        
+        printf "${user_load} requests per second for ${duration} seconds\n\n${container}: Before\n" >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	
+	printf "\n\n${container1}: Before\n" >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	minikube ssh docker exec ${container1} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
 }
 teardown_run() {
         local user_load=$1
 
-	printf "\nAfter\n" >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	kubectl exec -it ${pod} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	printf "\n\n${container}: After\n" >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
 	
-	printf "\n\n" >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	printf "\n\n${container1}: After\n" >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	minikube ssh docker exec ${container1} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	
+	printf "\n\n" >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat >> stress-results/docker2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
 
         # Remove temporary files
         kubectl exec ${experiment} -- rm /tmp/experiment.properties
 
         # Remove data added to database
-        kubectl exec -it ${pod} -- cqlsh -e "TRUNCATE scalar.logs;"
+        truncate_table_cmd="cqlsh -e \"TRUNCATE scalar.logs;\""
+        minikube ssh docker exec ${container} ${truncate_table_cmd}
 }
 run() {
         local user_load=$1
@@ -152,7 +164,7 @@ get_input $@
 setup_experiment
 
 mkdir -p stress-results
-mkdir -p stress-results/kube.${request}-${limit}\ \(${increment}\)
+mkdir -p stress-results/docker2.${request}-${limit}\ \(${increment}\)
 
 for user_load in $(seq $request $increment $limit)
 do

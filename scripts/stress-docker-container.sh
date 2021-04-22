@@ -106,23 +106,29 @@ setup_experiment() {
 	
         minikube ssh docker exec ${container} ${create_keyspace_cmd}
 	minikube ssh docker exec ${container} ${create_table_cmd}
-	
-	mkdir -p stress-results
 }
 setup_run() {
-        local user_load_list=$1
+        local user_load=$1
         local duration=$2
 
         # Create temporary files
         kubectl exec ${experiment} -- cp /exp/etc/experiment-template.properties /tmp/experiment.properties
-        kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_LOAD_TEMPLATE@${user_load_list}@g" /tmp/experiment.properties
+        kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_LOAD_TEMPLATE@${user_load}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_DURATION_TEMPLATE@${duration}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@target_urls=.*\$@target_urls=$(minikube ip)@g" /tmp/experiment.properties
         
-        minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat > stress-results/cpu.stat.docker.${user_load_list}.${container}
+        rm -f stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+        printf "${user_load} requests per second for ${duration} seconds on ${container}\n\nBefore\n" >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
 }
 teardown_run() {
-        local user_load_list=$1
+        local user_load=$1
+
+	printf "\nAfter\n" >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	
+	printf "\n\n" >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
 
         # Remove temporary files
         kubectl exec ${experiment} -- rm /tmp/experiment.properties
@@ -132,12 +138,12 @@ teardown_run() {
         minikube ssh docker exec ${container} ${truncate_table_cmd}
 }
 run() {
-        local user_load_list=$1
+        local user_load=$1
         local duration=$2
 
-        setup_run $user_load_list $duration
+        setup_run $user_load $duration
         kubectl exec ${experiment} -- java -jar /exp/lib/scalar-1.0.0.jar /exp/etc/platform.properties /tmp/experiment.properties
-        teardown_run $user_load_list
+        teardown_run $user_load
 }
 
 ## MAIN
@@ -149,18 +155,11 @@ get_input $@
 
 setup_experiment
 
-counter=0
-user_load_list=""
+mkdir -p stress-results
+mkdir -p stress-results/docker.${request}-${limit}\ \(${increment}\)
+
 for user_load in $(seq $request $increment $limit)
 do
-	user_load_list="${user_load_list}${user_load_list:+,}$user_load"
-	counter=$((${counter} + 1))
+	info "Stressing Cassandra with ${user_load} requests per second for ${duration} seconds"
+	run $user_load $duration
 done
-
-info "Stressing Cassandra with ${user_load_list} requests per second for $((${duration} * ${counter})) seconds total (${duration} seconds each)"
-run $user_load_list $duration
-
-printf "\n" >> stress-results/cpu.stat.docker.${user_load_list}.${container}
-minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/cpu.stat.docker.${user_load_list}.${container}
-
-kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat > stress-results/results.docker.${user_load_list}

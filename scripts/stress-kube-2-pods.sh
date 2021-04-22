@@ -36,6 +36,7 @@ ARG_SINGLE_RUN_REGEX=^[0-9]*$
 
 duration=60
 pod="cassandra-0"
+pod1="cassandra-1"
 experiment="experiment-controller-0"
 
 request=125
@@ -114,24 +115,31 @@ setup_run() {
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_DURATION_TEMPLATE@${duration}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@target_urls=.*\$@target_urls=${pod}.cassandra@g" /tmp/experiment.properties
         
-        rm -f stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-        printf "${user_load} requests per second for ${duration} seconds on ${pod}\n\nBefore\n" >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	kubectl exec -it ${pod} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+        rm -f stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+        
+        printf "${user_load} requests per second for ${duration} seconds\n\n${pod}: Before\n" >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	kubectl exec -it ${pod} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	
+	printf "\n\n${pod1}: Before\n" >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	kubectl exec -it ${pod1} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
 }
 teardown_run() {
         local user_load=$1
 
-	printf "\nAfter\n" >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	kubectl exec -it ${pod} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	printf "\n\n${pod}: After\n" >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	kubectl exec -it ${pod} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
 	
-	printf "\n\n" >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat >> stress-results/kube.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	printf "\n\n${pod1}: After\n" >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	kubectl exec -it ${pod1} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	
+	printf "\n\n" >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat >> stress-results/kube2.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
 
         # Remove temporary files
         kubectl exec ${experiment} -- rm /tmp/experiment.properties
 
         # Remove data added to database
-        kubectl exec -it ${pod} -- cqlsh -e "TRUNCATE scalar.logs;"
+       	kubectl exec -it ${pod} -- cqlsh -e "TRUNCATE scalar.logs;"
 }
 run() {
         local user_load=$1
@@ -152,7 +160,7 @@ get_input $@
 setup_experiment
 
 mkdir -p stress-results
-mkdir -p stress-results/kube.${request}-${limit}\ \(${increment}\)
+mkdir -p stress-results/kube2.${request}-${limit}\ \(${increment}\)
 
 for user_load in $(seq $request $increment $limit)
 do
