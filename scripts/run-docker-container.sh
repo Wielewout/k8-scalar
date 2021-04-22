@@ -3,7 +3,7 @@
 container=${1:-"cassandra-0-docker"}
 minikube ssh "docker run -d \
     --name ${container} \
-    --hostname cassandra-0-docker \
+    --hostname ${container} \
     -p 9042:9042 \
     --memory=2147484000 \
     --cpu-shares='1024' \
@@ -12,7 +12,7 @@ minikube ssh "docker run -d \
     --user=0 \
     --env=HEAP_NEWSIZE=200M \
     --env=MAX_HEAP_SIZE=1000M \
-    --env=CASSANDRA_SEEDS=cassandra-0.cassandra.default.svc.cluster.local \
+    --env=CASSANDRA_SEEDS=${container} \
     --env=CASSANDRA_CLUSTER_NAME=thesis-cassandra \
     --env=CASSANDRA_DC=thesis-cassandra-dc \
     --env=CASSANDRA_RACK=thesis-cassandra-rack \
