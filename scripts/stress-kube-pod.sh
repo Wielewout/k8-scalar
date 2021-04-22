@@ -118,7 +118,7 @@ teardown_run() {
         local user_load_list=$1
 
         # Remove temporary files
-        rm /tmp/experiment.properties
+        kubectl exec ${experiment} -- rm /tmp/experiment.properties
 
         # Remove data added to database
         kubectl exec $pod -- cqlsh -e "TRUNCATE scalar.logs;"
