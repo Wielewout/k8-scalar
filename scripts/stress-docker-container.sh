@@ -106,6 +106,8 @@ setup_experiment() {
 	
         minikube ssh docker exec ${container} ${create_keyspace_cmd}
 	minikube ssh docker exec ${container} ${create_table_cmd}
+	
+	mkdir -p stress-results
 }
 setup_run() {
         local user_load_list=$1
@@ -116,6 +118,8 @@ setup_run() {
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_LOAD_TEMPLATE@${user_load_list}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_DURATION_TEMPLATE@${duration}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@target_urls=.*\$@target_urls=$(minikube ip)@g" /tmp/experiment.properties
+        
+        minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat > stress-results/cpu.stat.docker.${user_load_list}.${container}
 }
 teardown_run() {
         local user_load_list=$1
@@ -155,3 +159,8 @@ done
 
 info "Stressing Cassandra with ${user_load_list} requests per second for $((${duration} * ${counter})) seconds total (${duration} seconds each)"
 run $user_load_list $duration
+
+printf "\n" >> stress-results/cpu.stat.docker.${user_load_list}.${container}
+minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/cpu.stat.docker.${user_load_list}.${container}
+
+kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat > stress-results/results.docker.${user_load_list}

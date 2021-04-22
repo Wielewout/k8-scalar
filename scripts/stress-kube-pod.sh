@@ -113,6 +113,8 @@ setup_run() {
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_LOAD_TEMPLATE@${user_load_list}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_DURATION_TEMPLATE@${duration}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@target_urls=.*\$@target_urls=${pod}.cassandra@g" /tmp/experiment.properties
+        
+        kubectl exec ${pod} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat > stress-results/cpu.stat.kube.${user_load_list}.${pod}
 }
 teardown_run() {
         local user_load_list=$1
@@ -151,3 +153,8 @@ done
 
 info "Stressing Cassandra with ${user_load_list} requests per second for $((${duration} * ${counter})) seconds total (${duration} seconds each)"
 run $user_load_list $duration
+
+printf "\n" >> stress-results/cpu.stat.kube.${user_load_list}.${container}
+kubectl exec ${pod} -- cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/cpu.stat.kube.${user_load_list}.${pod}
+
+kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat > stress-results/results.kube.${user_load_list}
