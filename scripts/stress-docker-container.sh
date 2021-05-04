@@ -117,18 +117,18 @@ setup_run() {
         kubectl exec ${experiment} -- sed -ie "s@USER_PEAK_DURATION_TEMPLATE@${duration}@g" /tmp/experiment.properties
         kubectl exec ${experiment} -- sed -ie "s@target_urls=.*\$@target_urls=$(minikube ip)@g" /tmp/experiment.properties
         
-        rm -f stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-        printf "${user_load} requests per second for ${duration} seconds on ${container}\n\nBefore\n" >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+        rm -f ${RESULTS_DIR}/results-${user_load}.dat
+        printf "${user_load} requests per second for ${duration} seconds on ${container}\n\nBefore\n" >> ${RESULTS_DIR}/results-${user_load}.dat
+	minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> ${RESULTS_DIR}/results-${user_load}.dat
 }
 teardown_run() {
         local user_load=$1
 
-	printf "\nAfter\n" >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	printf "\nAfter\n" >> ${RESULTS_DIR}/results-${user_load}.dat
+	minikube ssh docker exec ${container} cat /sys/fs/cgroup/cpu,cpuacct/cpu.stat >> ${RESULTS_DIR}/results-${user_load}.dat
 	
-	printf "\n\n" >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
-	kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat >> stress-results/docker.${request}-${limit}\ \(${increment}\)/results-${user_load}.dat
+	printf "\n\n" >> ${RESULTS_DIR}/results-${user_load}.dat
+	kubectl exec -it ${experiment} -- cat /exp/results--tmp-experiment-properties.dat >> ${RESULTS_DIR}/results-${user_load}.dat
 
         # Remove temporary files
         kubectl exec ${experiment} -- rm /tmp/experiment.properties
@@ -155,8 +155,9 @@ get_input $@
 
 setup_experiment
 
+RESULTS_DIR=stress-results/docker.${request}-${limit}\ \(${increment}\)
 mkdir -p stress-results
-mkdir -p stress-results/docker.${request}-${limit}\ \(${increment}\)
+mkdir -p ${RESULTS_DIR}
 
 for user_load in $(seq $request $increment $limit)
 do
