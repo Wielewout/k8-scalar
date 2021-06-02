@@ -1,0 +1,41 @@
+100 requests per second for 120 seconds on cassandra-0-docker
+
+Before
+nr_periods 1527
+nr_throttled 98
+throttled_time 10716873721
+
+After
+nr_periods 2753
+nr_throttled 182
+throttled_time 14752397774
+
+
+{ "results": "
+
+Experiment consisting of 1 runs and 1 request types:
+	CassandraWriteRequest
+
+
+Load,          Duration,      Troughput,     Capacity,      Slow requests, Timing accuracy
+------------------------------------------------------------------------------------------
+100,           120s,          11937,         99.475,        0%,            1.58ms         
+
+
+Breakdown of residence times for CassandraWriteRequest requests:
+
+Load,          Min,           Max,           Mean,          Std. dev.,     Shape,         Scale          (successful)   (failed)       (error)        (conn_problem) (timed_out)    (redirected)   (no_result)    
+100            0.536          80.241         3.909          5.081          0.592          6.606          11940          0              0              0              0              0              0              
+
+
+Percentiles of sampled residence times (only an approximation if residence_times_sample_fraction is set):
+
+CassandraWriteRequest (run 1, 100 users):
+	50.0%	of requests handled in 2.21ms.
+	90.0%	of requests handled in 8.242ms.
+	95.0%	of requests handled in 12.159ms.
+	99.0%	of requests handled in 25.312ms.
+	99.9%	of requests handled in 55.886ms.
+	99.99%	of requests handled in 79.867ms.
+
+" }

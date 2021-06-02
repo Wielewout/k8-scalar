@@ -1,0 +1,54 @@
+400 requests per second for 200 seconds
+
+cassandra-0: Before
+nr_periods 5920
+nr_throttled 2065
+throttled_time 268625516052
+
+
+cassandra-1: Before
+nr_periods 5721
+nr_throttled 2090
+throttled_time 266007288176
+
+
+cassandra-0: After
+nr_periods 7861
+nr_throttled 2713
+throttled_time 347614853044
+
+
+cassandra-1: After
+nr_periods 7670
+nr_throttled 2753
+throttled_time 350526835552
+
+
+{ "results": "
+
+Experiment consisting of 1 runs and 1 request types:
+	CassandraWriteRequest
+
+
+Load,          Duration,      Troughput,     Capacity,      Slow requests, Timing accuracy
+------------------------------------------------------------------------------------------
+400,           200s,          75966,         379.83,        0%,            2.767ms        
+
+
+Breakdown of residence times for CassandraWriteRequest requests:
+
+Load,          Min,           Max,           Mean,          Std. dev.,     Shape,         Scale          (successful)   (failed)       (error)        (conn_problem) (timed_out)    (redirected)   (no_result)    
+400            0.421          647.841        26.694         40.51          0.434          61.477         75966          0              0              0              0              0              0              
+
+
+Percentiles of sampled residence times (only an approximation if residence_times_sample_fraction is set):
+
+CassandraWriteRequest (run 1, 400 users):
+	50.0%	of requests handled in 12.087ms.
+	90.0%	of requests handled in 69.619ms.
+	95.0%	of requests handled in 89.297ms.
+	99.0%	of requests handled in 123.118ms.
+	99.9%	of requests handled in 580.711ms.
+	99.99%	of requests handled in 646.054ms.
+
+" }
