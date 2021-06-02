@@ -1,0 +1,16 @@
+{
+  "metadata": {
+      "name": "cassandra"
+  },
+  "image":{
+      "image": "docker.io/decomads/cassandra/2.2.16"
+  },
+  "command": [
+      "docker-entrypoint.sh",
+      "cassandra",
+      "-f"
+  ],
+  "log_path":"cassandra.log",
+  "linux": {
+  }
+}

@@ -1,0 +1,338 @@
+{
+	"ociVersion": "1.0.2-dev",
+	"process": {
+		"user": {
+			"uid": 0,
+			"gid": 0
+		},
+		"args": [
+			"docker-entrypoint.sh",
+			"cassandra",
+			"-f"
+		],
+		"env": [
+			"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+			"TERM=xterm",
+			"HOSTNAME=cassandra-0",
+			"POD_IP=10.244.0.17",
+			"MAX_HEAP_SIZE=1000M",
+			"HEAP_NEWSIZE=200M",
+			"CASSANDRA_SEEDS=cassandra-0.cassandra.default.svc.cluster.local",
+			"CASSANDRA_DC=thesis-cassandra-dc",
+			"CASSANDRA_CLUSTER_NAME=thesis-cassandra",
+			"CASSANDRA_RACK=thesis-cassandra-rack",
+			"CASSANDRA_AUTO_BOOTSTRAP=false",
+			"POD_NAMESPACE=default",
+			"KUBERNETES_PORT_443_TCP_PORT=443",
+			"KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1",
+			"KUBERNETES_SERVICE_HOST=10.96.0.1",
+			"KUBERNETES_SERVICE_PORT=443",
+			"KUBERNETES_SERVICE_PORT_HTTPS=443",
+			"KUBERNETES_PORT=tcp://10.96.0.1:443",
+			"KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443",
+			"KUBERNETES_PORT_443_TCP_PROTO=tcp",
+			"PATH=/opt/cassandra/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+			"LANG=en_US.UTF-8",
+			"LANGUAGE=en_US:en",
+			"LC_ALL=en_US.UTF-8",
+			"JAVA_VERSION=jdk8u242-b08",
+			"JAVA_HOME=/opt/java/openjdk",
+			"GOSU_VERSION=1.11",
+			"CASSANDRA_HOME=/opt/cassandra",
+			"CASSANDRA_CONF=/etc/cassandra",
+			"GPG_KEYS=514A2AD631A57A16DD0047EC749D6EEC0353B12C \tA26E528B271F19B9E5D8E19EA278B781FE4B2BDA \tA4C465FEA0C552561A392A61E91335D77E3E87CB",
+			"CASSANDRA_VERSION=2.2.16",
+			"CASSANDRA_SHA512=db2026342e876caf790833d49f7ab1a2fbba39bf380384ef66e2da4913f537690a56c97cb2f6ea17f667a0d34aeb406fa658db02aec1121a5ba7134ab59a5cfb",
+			"CASSANDRA_WRITE_REQUEST_TIMEOUT=20000",
+			"CASSANDRA_READ_REQUEST_TIMEOUT=50000"
+		],
+		"cwd": "/",
+		"capabilities": {
+			"bounding": [
+				"CAP_IPC_LOCK",
+				"CAP_CHOWN",
+				"CAP_DAC_OVERRIDE",
+				"CAP_FSETID",
+				"CAP_FOWNER",
+				"CAP_SETGID",
+				"CAP_SETUID",
+				"CAP_SETPCAP",
+				"CAP_NET_BIND_SERVICE",
+				"CAP_KILL"
+			],
+			"effective": [
+				"CAP_IPC_LOCK",
+				"CAP_CHOWN",
+				"CAP_DAC_OVERRIDE",
+				"CAP_FSETID",
+				"CAP_FOWNER",
+				"CAP_SETGID",
+				"CAP_SETUID",
+				"CAP_SETPCAP",
+				"CAP_NET_BIND_SERVICE",
+				"CAP_KILL"
+			],
+			"inheritable": [
+				"CAP_IPC_LOCK",
+				"CAP_CHOWN",
+				"CAP_DAC_OVERRIDE",
+				"CAP_FSETID",
+				"CAP_FOWNER",
+				"CAP_SETGID",
+				"CAP_SETUID",
+				"CAP_SETPCAP",
+				"CAP_NET_BIND_SERVICE",
+				"CAP_KILL"
+			],
+			"permitted": [
+				"CAP_IPC_LOCK",
+				"CAP_CHOWN",
+				"CAP_DAC_OVERRIDE",
+				"CAP_FSETID",
+				"CAP_FOWNER",
+				"CAP_SETGID",
+				"CAP_SETUID",
+				"CAP_SETPCAP",
+				"CAP_NET_BIND_SERVICE",
+				"CAP_KILL"
+			]
+		},
+		"oomScoreAdj": 744
+	},
+	"root": {
+		"path": "/var/lib/containers/storage/overlay/a3136950f1be31dca765aabec45c40f9aaecbd0e8045ae3a4389758c6037737e/merged"
+	},
+	"hostname": "cassandra-0",
+	"mounts": [
+		{
+			"destination": "/proc",
+			"type": "proc",
+			"source": "proc",
+			"options": [
+				"nosuid",
+				"noexec",
+				"nodev"
+			]
+		},
+		{
+			"destination": "/dev",
+			"type": "tmpfs",
+			"source": "tmpfs",
+			"options": [
+				"nosuid",
+				"strictatime",
+				"mode=755",
+				"size=65536k"
+			]
+		},
+		{
+			"destination": "/dev/pts",
+			"type": "devpts",
+			"source": "devpts",
+			"options": [
+				"nosuid",
+				"noexec",
+				"newinstance",
+				"ptmxmode=0666",
+				"mode=0620",
+				"gid=5"
+			]
+		},
+		{
+			"destination": "/dev/mqueue",
+			"type": "mqueue",
+			"source": "mqueue",
+			"options": [
+				"nosuid",
+				"noexec",
+				"nodev"
+			]
+		},
+		{
+			"destination": "/sys",
+			"type": "sysfs",
+			"source": "sysfs",
+			"options": [
+				"nosuid",
+				"noexec",
+				"nodev",
+				"ro"
+			]
+		},
+		{
+			"destination": "/sys/fs/cgroup",
+			"type": "cgroup",
+			"source": "cgroup",
+			"options": [
+				"nosuid",
+				"noexec",
+				"nodev",
+				"relatime",
+				"ro"
+			]
+		},
+		{
+			"destination": "/dev/shm",
+			"type": "bind",
+			"source": "/var/run/containers/storage/overlay-containers/1e611886cb517a0d8c8ed5eee32f5261ea0b85e07cdaff93c2995ec852f5292f/userdata/shm",
+			"options": [
+				"rw",
+				"bind"
+			]
+		},
+		{
+			"destination": "/etc/resolv.conf",
+			"type": "bind",
+			"source": "/var/run/containers/storage/overlay-containers/1e611886cb517a0d8c8ed5eee32f5261ea0b85e07cdaff93c2995ec852f5292f/userdata/resolv.conf",
+			"options": [
+				"bind",
+				"nodev",
+				"nosuid",
+				"noexec"
+			]
+		},
+		{
+			"destination": "/etc/hostname",
+			"type": "bind",
+			"source": "/var/run/containers/storage/overlay-containers/1e611886cb517a0d8c8ed5eee32f5261ea0b85e07cdaff93c2995ec852f5292f/userdata/hostname",
+			"options": [
+				"rw",
+				"bind"
+			]
+		},
+		{
+			"destination": "/etc/hosts",
+			"type": "bind",
+			"source": "/var/lib/kubelet/pods/90e3a208-7b89-46b7-abb9-61775240db2c/etc-hosts",
+			"options": [
+				"rw",
+				"rbind",
+				"rprivate",
+				"bind"
+			]
+		},
+		{
+			"destination": "/dev/termination-log",
+			"type": "bind",
+			"source": "/var/lib/kubelet/pods/90e3a208-7b89-46b7-abb9-61775240db2c/containers/cassandra/79d96955",
+			"options": [
+				"rw",
+				"rbind",
+				"rprivate",
+				"bind"
+			]
+		},
+		{
+			"destination": "/var/run/secrets/kubernetes.io/serviceaccount",
+			"type": "bind",
+			"source": "/var/lib/kubelet/pods/90e3a208-7b89-46b7-abb9-61775240db2c/volumes/kubernetes.io~secret/default-token-xr962",
+			"options": [
+				"ro",
+				"rbind",
+				"rprivate",
+				"bind"
+			]
+		}
+	],
+	"annotations": {
+		"io.container.manager": "cri-o",
+		"io.kubernetes.container.hash": "8cf768b7",
+		"io.kubernetes.container.name": "cassandra",
+		"io.kubernetes.container.ports": "[{\"name\":\"intra-node\",\"containerPort\":7000,\"protocol\":\"TCP\"},{\"name\":\"tls-intra-node\",\"containerPort\":7001,\"protocol\":\"TCP\"},{\"name\":\"jmx\",\"containerPort\":7199,\"protocol\":\"TCP\"},{\"name\":\"cql\",\"containerPort\":9042,\"protocol\":\"TCP\"}]",
+		"io.kubernetes.container.preStopHandler": "{\"exec\":{\"command\":[\"/bin/sh\",\"-c\",\"PID=$(pidof java) \\u0026\\u0026 kill $PID \\u0026\\u0026 while ps -p $PID \\u003e /dev/null; do sleep 1; done\"]}}",
+		"io.kubernetes.container.restartCount": "0",
+		"io.kubernetes.container.terminationMessagePath": "/dev/termination-log",
+		"io.kubernetes.container.terminationMessagePolicy": "File",
+		"io.kubernetes.cri-o.Annotations": "{\"io.kubernetes.container.ports\":\"[{\\\"name\\\":\\\"intra-node\\\",\\\"containerPort\\\":7000,\\\"protocol\\\":\\\"TCP\\\"},{\\\"name\\\":\\\"tls-intra-node\\\",\\\"containerPort\\\":7001,\\\"protocol\\\":\\\"TCP\\\"},{\\\"name\\\":\\\"jmx\\\",\\\"containerPort\\\":7199,\\\"protocol\\\":\\\"TCP\\\"},{\\\"name\\\":\\\"cql\\\",\\\"containerPort\\\":9042,\\\"protocol\\\":\\\"TCP\\\"}]\",\"io.kubernetes.container.preStopHandler\":\"{\\\"exec\\\":{\\\"command\\\":[\\\"/bin/sh\\\",\\\"-c\\\",\\\"PID=$(pidof java) \\\\u0026\\\\u0026 kill $PID \\\\u0026\\\\u0026 while ps -p $PID \\\\u003e /dev/null; do sleep 1; done\\\"]}}\",\"io.kubernetes.pod.terminationGracePeriod\":\"30\",\"io.kubernetes.container.terminationMessagePolicy\":\"File\",\"io.kubernetes.container.terminationMessagePath\":\"/dev/termination-log\",\"io.kubernetes.container.restartCount\":\"0\",\"io.kubernetes.container.hash\":\"8cf768b7\"}",
+		"io.kubernetes.cri-o.ContainerID": "01833c6a5bdadf8222fae96a316d6858f31089bd9f2807e5575ed5fd84b3ae27",
+		"io.kubernetes.cri-o.ContainerType": "container",
+		"io.kubernetes.cri-o.Created": "2021-05-02T16:14:45.430566512Z",
+		"io.kubernetes.cri-o.IP.0": "10.244.0.17",
+		"io.kubernetes.cri-o.Image": "docker.io/decomads/cassandra@sha256:e4ba7368cef6ffcdc2c113a53692b797ebe7a7ef8cefeef80d03392d172d5bba",
+		"io.kubernetes.cri-o.ImageName": "docker.io/decomads/cassandra:2.2.16",
+		"io.kubernetes.cri-o.ImageRef": "docker.io/decomads/cassandra@sha256:e4ba7368cef6ffcdc2c113a53692b797ebe7a7ef8cefeef80d03392d172d5bba",
+		"io.kubernetes.cri-o.Labels": "{\"io.kubernetes.pod.namespace\":\"default\",\"io.kubernetes.pod.name\":\"cassandra-0\",\"io.kubernetes.container.name\":\"cassandra\",\"io.kubernetes.pod.uid\":\"90e3a208-7b89-46b7-abb9-61775240db2c\"}",
+		"io.kubernetes.cri-o.LogPath": "/var/log/pods/default_cassandra-0_90e3a208-7b89-46b7-abb9-61775240db2c/cassandra/0.log",
+		"io.kubernetes.cri-o.Metadata": "{\"name\":\"cassandra\"}",
+		"io.kubernetes.cri-o.MountPoint": "/var/lib/containers/storage/overlay/a3136950f1be31dca765aabec45c40f9aaecbd0e8045ae3a4389758c6037737e/merged",
+		"io.kubernetes.cri-o.Name": "k8s_cassandra_cassandra-0_default_90e3a208-7b89-46b7-abb9-61775240db2c_0",
+		"io.kubernetes.cri-o.ResolvPath": "/var/run/containers/storage/overlay-containers/1e611886cb517a0d8c8ed5eee32f5261ea0b85e07cdaff93c2995ec852f5292f/userdata/resolv.conf",
+		"io.kubernetes.cri-o.SandboxID": "1e611886cb517a0d8c8ed5eee32f5261ea0b85e07cdaff93c2995ec852f5292f",
+		"io.kubernetes.cri-o.SandboxName": "k8s_cassandra-0_default_90e3a208-7b89-46b7-abb9-61775240db2c_0",
+		"io.kubernetes.cri-o.SeccompProfilePath": "",
+		"io.kubernetes.cri-o.Stdin": "false",
+		"io.kubernetes.cri-o.StdinOnce": "false",
+		"io.kubernetes.cri-o.TTY": "false",
+		"io.kubernetes.cri-o.Volumes": "[{\"container_path\":\"/etc/hosts\",\"host_path\":\"/var/lib/kubelet/pods/90e3a208-7b89-46b7-abb9-61775240db2c/etc-hosts\",\"readonly\":false},{\"container_path\":\"/dev/termination-log\",\"host_path\":\"/var/lib/kubelet/pods/90e3a208-7b89-46b7-abb9-61775240db2c/containers/cassandra/79d96955\",\"readonly\":false},{\"container_path\":\"/var/run/secrets/kubernetes.io/serviceaccount\",\"host_path\":\"/var/lib/kubelet/pods/90e3a208-7b89-46b7-abb9-61775240db2c/volumes/kubernetes.io~secret/default-token-xr962\",\"readonly\":true}]",
+		"io.kubernetes.pod.name": "cassandra-0",
+		"io.kubernetes.pod.namespace": "default",
+		"io.kubernetes.pod.terminationGracePeriod": "30",
+		"io.kubernetes.pod.uid": "90e3a208-7b89-46b7-abb9-61775240db2c",
+		"org.systemd.property.CollectMode": "'inactive-or-failed'",
+		"org.systemd.property.TimeoutStopUSec": "uint64 30000000"
+	},
+	"linux": {
+		"resources": {
+			"devices": [
+				{
+					"allow": false,
+					"access": "rwm"
+				}
+			],
+			"cpu": {
+				"shares": 1024,
+				"quota": 100000,
+				"period": 100000
+			},
+			"pids": {
+				"limit": 1024
+			},
+			"hugepageLimits": [
+				{
+					"pageSize": "2MB",
+					"limit": 0
+				}
+			]
+		},
+		"cgroupsPath": "kubepods-burstable-pod90e3a208_7b89_46b7_abb9_61775240db2c.slice:crio:01833c6a5bdadf8222fae96a316d6858f31089bd9f2807e5575ed5fd84b3ae27",
+		"namespaces": [
+			{
+				"type": "pid"
+			},
+			{
+				"type": "network",
+				"path": "/var/run/netns/3200ac06-ada7-4adb-a23b-0fc6c9076bcd"
+			},
+			{
+				"type": "ipc",
+				"path": "/var/run/ipcns/3200ac06-ada7-4adb-a23b-0fc6c9076bcd"
+			},
+			{
+				"type": "uts",
+				"path": "/var/run/utsns/3200ac06-ada7-4adb-a23b-0fc6c9076bcd"
+			},
+			{
+				"type": "mount"
+			}
+		],
+		"maskedPaths": [
+			"/proc/acpi",
+			"/proc/kcore",
+			"/proc/keys",
+			"/proc/latency_stats",
+			"/proc/timer_list",
+			"/proc/timer_stats",
+			"/proc/sched_debug",
+			"/proc/scsi",
+			"/sys/firmware"
+		],
+		"readonlyPaths": [
+			"/proc/asound",
+			"/proc/bus",
+			"/proc/fs",
+			"/proc/irq",
+			"/proc/sys",
+			"/proc/sysrq-trigger"
+		]
+	}
+}
