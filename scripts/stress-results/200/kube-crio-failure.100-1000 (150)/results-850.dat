@@ -1,14 +1,14 @@
 850 requests per second for 200 seconds on cassandra-0
 
 Before
-nr_periods 12717
-nr_throttled 477
-throttled_time 36489996492
+nr_periods 625
+nr_throttled 354
+throttled_time 50354173424
 
 After
-nr_periods 14743
-nr_throttled 546
-throttled_time 39064173893
+nr_periods 2650
+nr_throttled 1004
+throttled_time 143386947496
 
 
 { "results": "
@@ -19,23 +19,23 @@ Experiment consisting of 1 runs and 1 request types:
 
 Load,          Duration,      Troughput,     Capacity,      Slow requests, Timing accuracy
 ------------------------------------------------------------------------------------------
-850,           200s,          168193,        840.965,       0%,            8.847ms        
+850,           200s,          99786,         498.93,        3.136%,        1.24ms         
 
 
 Breakdown of residence times for CassandraWriteRequest requests:
 
 Load,          Min,           Max,           Mean,          Std. dev.,     Shape,         Scale          (successful)   (failed)       (error)        (conn_problem) (timed_out)    (redirected)   (no_result)    
-850            0.195          160.538        6.227          9.075          0.471          13.226         168200         0              0              0              0              0              0              
+850            ?              ?              ?              ?              ?              ?              0              99850          0              0              0              0              0              
 
 
 Percentiles of sampled residence times (only an approximation if residence_times_sample_fraction is set):
 
 CassandraWriteRequest (run 1, 850 users):
-	50.0%	of requests handled in 2.737ms.
-	90.0%	of requests handled in 15.743ms.
-	95.0%	of requests handled in 23.836ms.
-	99.0%	of requests handled in 44.988ms.
-	99.9%	of requests handled in 79.057ms.
-	99.99%	of requests handled in 104.685ms.
+	50.0%	of requests handled in ?ms.
+	90.0%	of requests handled in ?ms.
+	95.0%	of requests handled in ?ms.
+	99.0%	of requests handled in ?ms.
+	99.9%	of requests handled in ?ms.
+	99.99%	of requests handled in ?ms.
 
 " }

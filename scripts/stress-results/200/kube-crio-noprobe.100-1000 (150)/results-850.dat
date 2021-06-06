@@ -1,0 +1,27 @@
+850 requests per second for 200 seconds on cassandra-0
+
+Before
+nr_periods 88
+nr_throttled 80
+throttled_time 12395085450
+
+After
+nr_periods 114
+nr_throttled 80
+throttled_time 12395085450
+
+
+{ "results": "
+
+Experiment consisting of 1 runs and 0 request types:
+
+
+Load,          Duration,      Troughput,     Capacity,      Slow requests, Timing accuracy
+------------------------------------------------------------------------------------------
+0,             200s,          0,             0,             ?%,            0ms            
+
+
+Percentiles of sampled residence times (only an approximation if residence_times_sample_fraction is set):
+(No requests for run 1.)
+
+" }

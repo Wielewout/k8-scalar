@@ -1,14 +1,14 @@
 550 requests per second for 200 seconds on cassandra-0
 
 Before
-nr_periods 8636
-nr_throttled 360
-throttled_time 30035578658
+nr_periods 11101
+nr_throttled 5007
+throttled_time 745651075281
 
 After
-nr_periods 10659
-nr_throttled 399
-throttled_time 31840049483
+nr_periods 13139
+nr_throttled 6151
+throttled_time 932726271157
 
 
 { "results": "
@@ -19,23 +19,23 @@ Experiment consisting of 1 runs and 1 request types:
 
 Load,          Duration,      Troughput,     Capacity,      Slow requests, Timing accuracy
 ------------------------------------------------------------------------------------------
-550,           200s,          109196,        545.98,        0.002%,        1.305ms        
+550,           200s,          104044,        520.22,        0%,            1.837ms        
 
 
 Breakdown of residence times for CassandraWriteRequest requests:
 
 Load,          Min,           Max,           Mean,          Std. dev.,     Shape,         Scale          (successful)   (failed)       (error)        (conn_problem) (timed_out)    (redirected)   (no_result)    
-550            0.292          112.507        4.913          8.038          0.374          13.15          109199         0              0              0              0              0              0              
+550            0.322          563.968        36.685         43.872         0.699          52.466         104044         0              0              0              0              0              0              
 
 
 Percentiles of sampled residence times (only an approximation if residence_times_sample_fraction is set):
 
 CassandraWriteRequest (run 1, 550 users):
-	50.0%	of requests handled in 2.058ms.
-	90.0%	of requests handled in 11.905ms.
-	95.0%	of requests handled in 18.843ms.
-	99.0%	of requests handled in 41.149ms.
-	99.9%	of requests handled in 85.049ms.
-	99.99%	of requests handled in 107.804ms.
+	50.0%	of requests handled in 18.303ms.
+	90.0%	of requests handled in 94.632ms.
+	95.0%	of requests handled in 109.322ms.
+	99.0%	of requests handled in 142.414ms.
+	99.9%	of requests handled in 435.942ms.
+	99.99%	of requests handled in 536.835ms.
 
 " }
